@@ -4,8 +4,7 @@ from test.histogram_mots import description
 from ivegotmail.exercice3 import apparitions, normalise
 import numpy as np
 
-CEIL = 0.1
-
+# CEIL = 0.1
 # r,w,f = hm.representation(aspam, len(spam), anospam, len(nospam), CEIL)
 
 def representation_plus(d_spam, card_spam, d_nospam, card_nospam):
@@ -142,7 +141,7 @@ def description_plus_parallel(emails, nosigwords, threads=6):
     return results
 
 
-def apprend_modele(spam, nospam):
+def apprend_modele(spam, nospam, threads=1):
 
     aspam, anospam = apparitions(spam), apparitions(nospam)
     sigwords, nosigwords = \
@@ -164,8 +163,16 @@ def apprend_modele(spam, nospam):
 
     print('Apprend ENOSIG...')
     dplus = {
-        +1: np.array(description_plus_parallel(spam, nosigwords)),
-        -1: np.array(description_plus_parallel(nospam, nosigwords))
+        +1: np.array(
+            description_plus_parallel(
+                spam, nosigwords, threads=threads
+            )
+        ),
+        -1: np.array(
+            description_plus_parallel(
+            nospam, nosigwords, threads=threads
+            )
+        )
     }
     print('Estimation ENOSIG...')
     enosig_all = {+1: [], -1: []}
