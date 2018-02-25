@@ -1,0 +1,13 @@
+En faisant apprendre 50 modeles sur 50 split differents 
+avec 80% d'exemples pour l'apprentissage et le reste pour le test
+
+- classification de spam
+erreur min 0.04489337822671158
+erreur moy 0.07528058361391694
+variance 0.00043340170000289726
+**bien**
+
+- classification de non spam
+erreur min 0.8571428571428572
+erreur moy 0.9058800315706392
+**pas bien**
