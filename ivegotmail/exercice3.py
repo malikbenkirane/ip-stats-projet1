@@ -11,6 +11,7 @@ def normalise(emails):
     return normed_emails
 
 def apparitions(emails, norm=True):
+    """Compte et retourne le nombre d'emails ou apparait un mot"""
     compte_mots = dict()
     if norm:
         emails = normalise(emails)

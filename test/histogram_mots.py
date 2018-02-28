@@ -72,6 +72,7 @@ class ModelMots(Model):
             return self.enospam[x]
 
 
+# XXX DEPRECEATE
 def representation(d_spam, card_spam, d_nospam, card_nospam, ceil):
     fusion = dict()
     N = card_spam + card_nospam

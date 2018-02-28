@@ -174,6 +174,7 @@ def apprend_modele(spam, nospam, threads=1):
             )
         )
     }
+
     print('Estimation ENOSIG...')
     enosig_all = {+1: [], -1: []}
     for card, label in ((len(spam), +1), (len(nospam), -1)):
