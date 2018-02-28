@@ -33,7 +33,7 @@
 Nous nous int\'eressons au probl\'eme de classification d'une base de courriers \'el\'ectroniques (emails). Nous souhaitons \`a partir du corps d'un email savoir s'il s'agit d'un spam ou non. Il s'agit d'inf\'erer cette connaissance \`a partir d'un corpus d'emails avec une approche bas\'ee sur les probabilit\'es (relation de Bayes). Cette approche est  pr\'esent\'ee en premi\`ere partie. L'objet de ce compte-rendu est ensuite d'\'etudier diff\'erentes mod\'elisations avec des descriptions enrichies pour r\'epondre au probl\'eme de classification.
 \end{abstract}
 
-\section{Classifieur par\\Inf\'erence Bay\'esienne}
+\section{Classifieur par Inf\'erence Bay\'esienne}
 Dans cette partie, pour inf\'erer \`a partir des distributions de probabilit\'es estim\'ees dans la phase d'apprentissage si un email est un spam ou non, nous illustrerons une solution \'a cette probl\'ematique  avec un mod\'ele tr\`es simple.  
 Nous travaillerons tout le long sur deux phases distinctes : la phase d'apprentissage et la phase d'\'evaluation ou de pr\'ediction pour discuter de la qualit\'e du mod\`ele choisis.
 
@@ -72,6 +72,11 @@ $P(X=D(x)|Y=y)$. Puis nous estimons la distribution de $P(Y=y)$ parceque
 l'ensemble d'apprentissage est fini. 
 La distribution sur la classe des spams de notre estimateur est 
 repr\'esent\'ee sur la F\textsc{igure} \ref{fig:histo1spam}.
+On lit la valeur pour $l(x)$ en abscisse et l'effectif en ordonn\'ee.
+Plut\^ot que garder toutes les valeurs apparues pour $l(x)$ nous les regroupons 
+dans des intervalles $[i_k,s_k]$ telles que pour tout intervalle $k$, 
+$\text{Card}\left(\left\{x|\ l(x)\in [i_k,s_k\right\}\right)=5$ par exemple
+(voir F\textsc{igure} \ref{fig:histo5}).
 
 \begin{figure}[h!]
 \begin{center}
@@ -80,6 +85,68 @@ repr\'esent\'ee sur la F\textsc{igure} \ref{fig:histo1spam}.
 \end{center}
 \label{fig:histo1spam}
 \end{figure}
+
+\begin{figure}[h!]
+\begin{center}
+    \caption{Estimation regroup\'ee des distributions pour la description par longueur}
+    \includegraphics[width=13cm]{histo5}
+\end{center}
+\label{fig:histo5}
+\end{figure}
+
+\pagebreak
+Nous avons donc valid\'e la phase d'apprentissage sur le corpus $E$ et obtenu
+le mod\'ele $\Theta(E)$ d\'efini par deux fonctions: 
+$e\colon\mathbb{N}\rightarrow [0,1]$ l'estimation de probabilit\'e 
+pour les email $x$ d\'ecrits pour $l(x)$ sachant que $x$ est un spam
+et $\overline{e}\colon\mathbb{N}\mapsto [0,1]$ l'estimateur sachant qu'il ne s'agit
+pas d'un spam; et par $p=\text{Card}\left(\left\{(x,y)\in E\ |\ y=1\right\}\right)/%
+\text{Card}(E)$ (et $\overline{p}=1-p$).
+
+Plus pr\'ecis\`ement, les fonctions $e$ et $\overline{e}$ sont d\'efinies 
+sur une partition finie de $\mathbb{N}$ comme indiqu\'e
+pour construire les intervalles $[i_k,s_k]$ dont il est question plus haut.
+La pr\'ediction s'\'evalue avec le signe de l'expression
+\begin{equation}
+    e(\hat{x}) \cdot p - \overline{e}(\hat{x}) \cdot (1-p)
+\end{equation}
+avec les notations vues jusque l\`a. Donc en pratique on retournera l'estimation 
+sur l'intervalle appris dans lequel $\hat{x}=l(x)$ se trouve. C'est justement ce
+qui a \'et\'e impl\'ement\'e pour ce cas de figure o\'u le descripteur $D$ est une
+fonction \`a images dans $\mathbb{N}$.
+
+Pour finir d'illustrer l'\'etude de ce premier classifieur, nous souhaiterions
+valider ou infirmer ses pr\'edictions. Pour ce faire nous divisons
+l'ensemble $E$ d'apprentissage en deux sous-ensembles $A$ et $T$. 
+L'ensemble $A$ pour la phase d'apprentissage et l'ensmble $T$ pour 
+estimer l'erreur des pr\'edictions. Pour cette demonstration, 
+nous choisissons arbitrairement $80\%$ des emails \'etiquet\'es dans $E$ 
+pour constituer $A$ et les emails restants constituent $T$. Ce choix arbitraire
+est alors r\'ealis\'e 40 fois et \`a chaque d\'ecoupage nous notons le nombre
+de pr\'edictions incorrectes. La moyenne de la probabilit\'e d'erreur et
+le score du meilleur classifieur sont pr\'esent\'es dans la T\textsc{able}
+\ref{tbl:erreur_exo2}.
+
+\begin{table}[h]
+\begin{center}
+    \caption{Estimation de la probabilit\'e d'erreur}
+    \vskip 4mm
+    \begin{tabular}{ccc}
+        &min$_f(P(f(x)\neq y))$&en moyenne\\
+        sur $T$&0.4986098239110287&0.5347775718257646\\
+        sur $A$&0.43703703703703706&0.48606481481481484
+    \end{tabular}
+    \label{tbl:erreur_exo2}
+\end{center}
+\end{table}
+
+Autant dire que les mod\`eles appris avec une telle application de description
+ne sont pas fiables. Cependant, ce mod\`ele nous a permis de d\'etailler chaque
+phase dans la r\'esolution du probl\`eme de classification pos\'e. Nous allons
+nous porter sur le choix de la description $D$ plus compl\`ete pour am\'eliorer
+ces r\'esultats.
+
+\section{Description vectorielle d'emails}
 
 %\end{multicols}
 \end{document}

@@ -10,8 +10,8 @@ NTEST = 40
 SPLIT = .8
 
 erreurs = {
-    'test': {+1:[], -1:[]},
-    'train': {+1:[], -1:[]}
+    'test': [],
+    'train': []
 }
 
 for i in range(NTEST):
@@ -21,6 +21,5 @@ for i in range(NTEST):
     modele = apprend_modele(spam_train, nospam_train)
     erreur_test = estimation_erreur(spam_test, nospam_test, modele)
     erreur_train = estimation_erreur(spam_train, nospam_train, modele)
-    for label in erreur_test:
-        erreurs['test'][label].append(erreur_test[label])
-        erreurs['train'][label].append(erreur_train[label])
+    erreurs['test'].append(erreur_test)
+    erreurs['train'].append(erreur_train)
