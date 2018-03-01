@@ -4,7 +4,7 @@ from test.independance import representation_generale
 from test.histogram_mots import description as description_hm
 import numpy as np
 
-DMOTS = 10000
+DMOTS = 500
 
 class ModeleMotsInde():
 
@@ -46,10 +46,11 @@ def estimation_worker(email, f, modele):
     return  x * f
 
 
-def apprend_modele(spam, nospam, threads=6):
+def apprend_modele(spam, nospam, decalage=0, threads=6):
 
+    print('Apprend Modele %i (%i threads)' % (decalage, threads))
     words, freqs = representation_generale(spam + nospam)
-    mots = words[:DMOTS]
+    mots = words[decalage:DMOTS + decalage]
 
     N = len(spam) + len(nospam)
     plabels = {+1: len(spam) / N, -1: len(nospam) / N}

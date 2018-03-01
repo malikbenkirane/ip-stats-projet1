@@ -117,5 +117,5 @@ def estimation_erreur(spam, nospam, modele):
     erreurs = 0
     for mails, label in ((spam, 1), (nospam, -1)):
         prediction = np.asarray(predit_email(mails, modele))
-        erreurs = len(prediction[prediction != label])
+        erreurs += len(prediction[prediction != label])
     return erreurs / (len(spam) + len(nospam))
