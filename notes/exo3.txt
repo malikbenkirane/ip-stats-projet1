@@ -1,0 +1,15 @@
+representation modele plus
+---------------------------
+ERR -- (0.01853224610822833, 0.008154188287620464, 0.005559673832468496, 0.004447739065974796, 0.0029651593773165306)
+
+[], 
+['been', 'first', 'these', '20', '2009', 'better', 'run', 'within', 'month', 'latest', 'sell', 'sites', 'limited', 'cases', 'shop'], 
+['unsubscribe', 'nbsp', 'rights', 'view', 'reserved', 'newsletter', 'having', 'copy', 'trouble', 'reading', 'browser'], 
+['first', 'these', '2009', 'better', 'run', 'month', 'latest', 'sell', 'sites', 'limited', 'cases', 'shop'], 
+['please', 'e', 'unsubscribe', 'mail', '2009', 'newsletter', 'policy', 'privacy', 'copyright', 'contact', 'inc', 'terms']]
+
+
+representation modele arbitraire 500 mots plus frequents
+--------------------------------------------------------
+ERR -- (0.015196441808747232, 0.00630096367679763, 0.005930318754633063, 0.004447739065974796, 0.0029651593773165306)
+exemples non pertinent 
