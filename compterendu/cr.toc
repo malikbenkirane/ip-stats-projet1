@@ -1,0 +1,7 @@
+\select@language {french}
+\contentsline {section}{\numberline {1}Classifieur par Inf\'erence Bay\'esienne}{1}{section.1}
+\contentsline {section}{\numberline {2}Description vectorielle d'emails, repr\'esentations, cas limites}{4}{section.2}
+\contentsline {section}{\numberline {3}Enrichissement au moindre co\^ut : notre mod\`ele}{7}{section.3}
+\contentsline {subsection}{\numberline {3.1}Constuire une repr\'esentation $\sigma , \overline \sigma $ satisfaisante}{7}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Notre mod\`ele : 0.05 pr\'edictions \'eronn\'ees en moyenne}{8}{subsection.3.2}
+\contentsline {paragraph}{Conclusion --}{8}{section*.2}

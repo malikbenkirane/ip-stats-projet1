@@ -1,0 +1,392 @@
+--- cr1.tex	2018-03-04 16:21:00.134006297 +0100
++++ cr.tex	2018-03-02 12:20:12.264045148 +0100
+@@ -38,79 +38,49 @@
+ \setlength{\parindent}{15pt}
+ 
+ \begin{abstract}
+-Nous nous int\'eressons au probl\'eme de classification d'une base de courriers
+-\'el\'ectroniques (emails).
+-Nous souhaitons \`a partir du corps d'un email savoir s'il s'agit
+-d'un spam ou non. Il s'agit d'inf\'erer cette connaissance \`a partir
+-d'un corpus d'emails avec une approche bas\'ee sur les probabilit\'es
+-(relation de Bayes). Cette approche est  pr\'esent\'ee en premi\`ere partie.
+-L'objet de ce compte-rendu est ensuite d'\'etudier diff\'erentes mod\'elisations
+-jjavec des descriptions enrichies pour r\'epondre au probl\`eme de classification.
++Nous nous int\'eressons au probl\'eme de classification d'une base de courriers \'el\'ectroniques (emails). Nous souhaitons \`a partir du corps d'un email savoir s'il s'agit d'un spam ou non. Il s'agit d'inf\'erer cette connaissance \`a partir d'un corpus d'emails avec une approche bas\'ee sur les probabilit\'es (relation de Bayes). Cette approche est  pr\'esent\'ee en premi\`ere partie. L'objet de ce compte-rendu est ensuite d'\'etudier diff\'erentes mod\'elisations avec des descriptions enrichies pour r\'epondre au probl\'eme de classification.
+ \end{abstract}
+ 
+ \section{Classifieur par Inf\'erence Bay\'esienne}
+-Dans cette partie, pour \'etablir  \`a partir des distributions de
+-probabilit\'es estim\'ees dans la phase d'apprentissage si un email est
+-un spam ou non, nous illustrerons une solution \'a cette probl\'ematique
+-avec un mod\`ele tr\`es simple.
+-Nous travaillerons tout le long sur deux phases distinctes :
+-la phase d'apprentissage et la phase d'\'evaluation ou de pr\'ediction pour
+-discuter de la qualit\'e du mod\`ele choisis.
+-
+-Il est naturel de s'int\'eresser \`a la description d'un email, description que
+-nous noterons $D(x)$ ou $\hat{x}$, s'il s'agit d'un spam nous lui associerons
+-une \'etiquette de valeur $+1$, sinon de valeur $-1$.
+-Au d\'epart avec un ensemble d'apprentissage
+-$E=\left\{(x,y), y\in \left\{-1,+1\right\}\right\}$ et formellement,
+-nous cherchons une application $f_{\Theta(E)}$  (classifieur),
+-telle que pour tout email $x$ non n\'ecessairement dans $E$, $f_{\Theta(E)}(x)$
+-soit la classe de $x$.
+-
+-La phase d'apprentissage est donc la phase o\`u on estimera le mod\`ele
+-$\Theta(E)$ par inf\'erence sur $E$ et la phase d'\'evaluation est la phase
+-o\`u on calcul l'image de $f_{\Theta(E)}$ pour un ensemble d'emails.
++Dans cette partie, pour inf\'erer \`a partir des distributions de probabilit\'es estim\'ees dans la phase d'apprentissage si un email est un spam ou non, nous illustrerons une solution \'a cette probl\'ematique  avec un mod\'ele tr\`es simple.  
++Nous travaillerons tout le long sur deux phases distinctes : la phase d'apprentissage et la phase d'\'evaluation ou de pr\'ediction pour discuter de la qualit\'e du mod\`ele choisis.
++
++Il est naturel de s'int\'eresser \`a la description d'un email, description que nous noterons $D(x)$ ou $\hat{x}$, s'il s'agit d'un spam nous lui associeront une \'etiquette de valeur $+1$, sinon de valeur $-1$. 
++Au d\'epart avec un ensemble d'apprentissage $E=\left\{(x,y), y\in \left\{-1,+1\right\}\right\}$ et formellement, nous cherchons une application $f_{\Theta(E)}$  (classifieur), telle que pour tout email $x$ non n\'ecessairement dans $E$, $f_{\Theta(E)}(x)$ soit la classe de $x$. 
++
++La phase d'apprentissage est donc la phase o\`u l'on estimera le mod\`ele  $\Theta(E)$ par inf\'erence sur $E$ et la phase d'\'evaluation est la phase o\'u on calcul l'image de $f_{\Theta(E)}$ pour un ensemble d'emails.
+ 
+ Nous consid\'erons deux variables al\'eatoires:
+ \begin{enumerate}
+ \item $X$ prendra les valeurs possibles des descriptions pour un email
+-\item $Y$ vaut $+1$ ou bien $-1$ selon qu'il s'agit respectivement
+-d'un spam ou non.
++\item $Y$ vaut $+1$ ou bien $-1$ selon qu'il s'agit respectivement d'un spam ou non.
+ \end{enumerate}
+ 
+-Notre approche est probabiliste : on souhaite par intuition
+-conna\^itre les distributions
++Notre approche est probabiliste : on souhaite par intuition conna\^itre les distributions 
+ \label{eq:estimation}
+ \begin{equation}P(Y=y|X=\hat{x}),\ \ y\in\{-1,+1\}\end{equation}
+-et pouvoir les comparer pour esp\'erer ensuite pr\'edire si $D^{-1}(\hat{x})$
+-(l'email d\'ecrit par $\hat{x}$) est un spam ou encore si l'application
+-$\hat{f}_E\colon Im(X)\rightarrow \{+1,-1\}$ apprise avec la description $D$
+-indique pour un email $x$ sa classe simplement en calculculant
+-$\hat{f}_E[ D(x)]$.
++et pouvoir les comparer pour esp\'erer ensuite pr\'edire si $D^{-1}(\hat{x})$ (l'email d\'ecrit par $\hat{x}$) est un spam ou encore si l'application $\hat{f}_E\colon Im(X)\rightarrow \{+1,-1\}$ apprise avec la description $D$ indique pour un email $x$ sa classe simplement par le calcul $\hat{f}_E[ D(x)]$.
+ 
+-La fronti\`ere de d\'ecision peut se calculer en utilisant la relation de Bayes
+-sur les probabilit\'es conditionnelles \eqref{eq:estimation}
++La fronti\`ere de d\'ecision peut se cacluler en utilisant la relation de Bayes sur les probabilit\'es conditionnelles \eqref{eq:estimation}
+ \begin{align}
+ \label{eq:estimation_spam}
+ \frac{P(X=\hat{x}|Y=+1)P(Y=+1)}{P(X=D(x))}
+ - \frac{P(X=\hat{x}|Y=-1)P(Y=-1)}{P(X=D(x))}=0
+ \end{align}
+ 
+-\eqref{eq:estimation_spam} est l'estimation qu'un email d\'ecrit par $\hat{x}$
+-est un spam (resp. n'est pas un spam) pond\'er\'ee par le ratio entre le nombre
+-de spam (resp. non spam) et des emails dont les descriptions sont identiques.
+-
+-Nous consid\'erons la description $D\colon x\mapsto l(x)$
+-tel que $l(x)\in \mathbb{N}$ est la longueur du corps d'un email.
+-Nous estimons, pour cette description, \'etant donn\'e une classe
+-sur l'ensemble d'apprentissage, en comptant le nombre d'emails
+-pour chaque description apparue lors du parcours de l'ensemble d'apprentissage.
+-Il s'agit d'utiliser l'estimateur de fr\'equence pour la probabilit\'e
+-$P(X=D(x)|Y=y)$. Puis nous estimons la distribution de $P(Y=y)$ parce que
+-l'ensemble d'apprentissage est fini.
+-La distribution sur la classe des spams de notre estimateur est
++\eqref{eq:estimation_spam} est l'estimation qu'un email d\'ecrit par $\hat{x}$ est un spam (resp. n'est pas un spam) pond\'er\'ee par le ratio entre le nombre de spam (resp. non spam) et des emails de m\^eme description.
++
++Nous consid\'erons la description $D\colon x\mapsto l(x)$ 
++tel que $l(x)\in \mathbb{N}$ est la longeur du corps d'un email. 
++Nous estimons, pour cette description, \'etant donn\'e une classe 
++sur l'ensemble d'apprentissage, en comptant le nombre d'emails 
++pour chaque description apparue lors du parcours de l'ensemble d'apprentissage. 
++Il s'agit d'utiliser l'estimateur de fr\'equence pour la probabilit\'e 
++$P(X=D(x)|Y=y)$. Puis nous estimons la distribution de $P(Y=y)$ parceque 
++l'ensemble d'apprentissage est fini. 
++La distribution sur la classe des spams de notre estimateur est 
+ repr\'esent\'ee sur la F\textsc{igure} \ref{fig:histo1spam}.
+-On lit une valeur prise par $l(x)$ en abscisse et l'effectif compt\'e
+-en ordonn\'ee.
++On lit la valeur pour $l(x)$ en abscisse et l'effectif en ordonn\'ee.
+ 
+ \begin{figure}[h]
+ \begin{center}
+@@ -120,10 +90,9 @@
+ \end{center}
+ \end{figure}
+ 
+-Plut\^ot que garder toutes les valeurs apparues pour $l(x)$ nous les regroupons
+-dans des intervalles $[i_k,s_k]$ telles que pour tout intervalle d\'ecrit par
+-son indice $k$,
+-$\text{Card}\left(\left\{\ x\ |\ l(x)\in [i_k,s_k\right\}\right)=5$ par exemple
++Plut\^ot que garder toutes les valeurs apparues pour $l(x)$ nous les regroupons 
++dans des intervalles $[i_k,s_k]$ telles que pour tout intervalle $k$, 
++$\text{Card}\left(\left\{\ x|\ l(x)\in [i_k,s_k\right\}\right)=5$ par exemple
+ (voir F\textsc{igure} \ref{fig:histo5corpus}).
+ 
+ \begin{figure}[h!]
+@@ -136,31 +105,31 @@
+ 
+ \pagebreak
+ Nous avons donc valid\'e la phase d'apprentissage sur le corpus $E$ et obtenu
+-le mod\`ele $\Theta(E)$ d\'efini par deux fonctions:
+-$e\colon\mathbb{N}\rightarrow [0,1]$ l'estimation de probabilit\'e
++le mod\'ele $\Theta(E)$ d\'efini par deux fonctions: 
++$e\colon\mathbb{N}\rightarrow [0,1]$ l'estimation de probabilit\'e 
+ pour les email $x$ d\'ecrits pour $l(x)$ sachant que $x$ est un spam
+ et $\overline{e}\colon\mathbb{N}\mapsto [0,1]$ l'estimateur sachant qu'il ne s'agit
+ pas d'un spam; et par $p=\text{Card}\left(\left\{(x,y)\in E\ |\ y=1\right\}\right)/%
+ \text{Card}(E)$ (et $\overline{p}=1-p$).
+ 
+-Plus pr\'ecis\'ement, les fonctions $e$ et $\overline{e}$ sont d\'efinies
++Plus pr\'ecis\`ement, les fonctions $e$ et $\overline{e}$ sont d\'efinies 
+ sur une partition finie de $\mathbb{N}$ comme indiqu\'e
+ pour construire les intervalles $[i_k,s_k]$ dont il est question plus haut.
+ La pr\'ediction s'\'evalue avec le signe de l'expression
+ \begin{equation}
+     e(\hat{x}) \cdot p - \overline{e}(\hat{x}) \cdot (1-p)
+ \end{equation}
+-avec les notations d\'ecrites. Donc en pratique on retournera l'estimation
++avec les notations vues jusque l\`a. Donc en pratique on retournera l'estimation 
+ sur l'intervalle appris dans lequel $\hat{x}=l(x)$ se trouve. C'est justement ce
+-qui a \'et\'e impl\'ement\'e pour ce cas de figure o\'u le descripteur $D$ est
+-une fonction dont les images sont finies et sont des parties $\mathbb{N}$.
++qui a \'et\'e impl\'ement\'e pour ce cas de figure o\'u le descripteur $D$ est une
++fonction \`a images dans $\mathbb{N}$.
+ 
+-Pour finir d'illustrer avec l'\'etude de ce premier classifieur, nous souhaitons
+-valider ou infirmer ses valeurs de pr\'edictions. Pour ce faire nous divisons
+-l'ensemble $E$ d'apprentissage en deux sous-ensembles $A$ et $T$.
+-L'ensemble $A$ pour la phase d'apprentissage et l'ensemble $T$ pour
+-estimer l'erreur des pr\'edictions. Pour cette d\'emonstration,
+-nous choisissons arbitrairement $80\%$ des emails \'etiquet\'es dans $E$
++Pour finir d'illustrer l'\'etude de ce premier classifieur, nous souhaiterions
++valider ou infirmer ses pr\'edictions. Pour ce faire nous divisons
++l'ensemble $E$ d'apprentissage en deux sous-ensembles $A$ et $T$. 
++L'ensemble $A$ pour la phase d'apprentissage et l'ensmble $T$ pour 
++estimer l'erreur des pr\'edictions. Pour cette demonstration, 
++nous choisissons arbitrairement $80\%$ des emails \'etiquet\'es dans $E$ 
+ pour constituer $A$ et les emails restants constituent $T$. Ce choix arbitraire
+ est alors r\'ealis\'e 40 fois et \`a chaque d\'ecoupage nous notons le nombre
+ de pr\'edictions incorrectes. La moyenne de la probabilit\'e d'erreur et
+@@ -184,23 +153,22 @@
+ ne sont pas fiables. Cependant, ce mod\`ele nous a permis de d\'etailler chaque
+ phase dans la r\'esolution du probl\`eme de classification pos\'e. Nous allons
+ nous porter plus longtemps \`a pr\'esent sur le choix de la description $D$
+-pour compl\'eter le manque d'informations qui nous emp\^eche
++pour compl\`eter le manque d'informations qui nous emp\^eche 
+ d'inf\'erer correctement la classe \`a laquelle appartient un email.
+ 
+ 
+-\section{Description vectorielle d'emails, repr\'esentations, cas limites}
++\section{Descriptions vectorielles d'emails, repr\'esentations, cas limites}
+ 
+-L'objet d'\'etude, ici, est de r\'efl\'echir et d'\'evaluer la performance
+-de mod\`eles appris sur des descriptions enrichies.
++L'objet d'\'etude, ici, est de r\'ef\'echir et d'\'evaluer la performance 
++de mod\`eles munis de descriptions enrichies.
+ 
+-Avec la description que nous avions choisi pour l'exemple de la
+-premi\`ere partie nous avons omis jusque l\`a le corps de l'email.
+-Il pourrait s'agir sur papier de d\'ecomposer le corps en mots et
+-de repr\'esenter un email $x=\left(x_{i_1},x_{i_2},\ldots,x_{i_{l(x)}}\right)$
+-avec $\mathcal{D}=\left\{x_1,x_2,\ldots,x_d\right\}$ le dictionnaire des $d$
+-mots possiblement trouvables dans un email.
+-Nous pouvons imaginer plusieurs descriptions pour cette
+-repr\'esentation de $x$ :
++Avec la description que nous avions choisi pour l'exemple de la premi\`ere partie 
++nous avons omis jusque l\`a le corps de l'email. Il pourrait s'agir sur papier de 
++d\'ecomposer le corps en mots et de repr\'esenter un email 
++$x=\left(x_{i_1},x_{i_2},\ldots,x_{i_{l(x)}}\right)$ 
++avec $\mathcal{D}=\left\{x_1,x_2,\ldots,x_d\right\}$ le dictionnaire des $d$ 
++mots possiblement dans un email. Nous pouvous imaginer plusieurs descriptions pour
++cette repr\'esentation de $x$ :
+ \begin{align*}
+     \label{eq:description_vect}
+     D_0(x) = &\left(\mathbb{I}_x[x_{i}]\right)_{i\in\{1,\cdots,d\}}\\
+@@ -209,31 +177,31 @@
+     D_n(x) = &\left(\mathbb{I}_x[x_{i_1},x_{i_2},\ldots.x_{i_n}]\right)%
+     _{i_1\neq i_2\neq \cdots \neq i_n\in\{1,\cdots,d\}}
+ \end{align*}
+-o\`u $\mathbb{I}_x[x_{i_1},x_{i_2},x_{i_n}]$ vaut $1$ si $x$ contient
+-la sous-s\'equence de mots $(x_{i_1},x_{i_2},\ldots,x_{i_n})$ et $0$ sinon.
++o\`u $\mathbb{I}_x[x_{i_1},x_{i_2},x_{i_n}]$ vaut $1$ si $x$ contient 
++la sous-s\'equence de mots $(x_{i_1},x_{i_2},x_{i_n})$ et $0$ sinon.
+ 
+-Par intuition, $D_0$ est une description moins riche que $D_1$, $\ldots$,
+-$D_n$, avec pour hypoth\`ese tr\`es raisonnable que $n<<d$.
++Par intuition, $D_0$ est une description moins riche que $D_1$, $\ldots$, 
++$D_n$, avec pour hypoth\`ese tr\`es raisonable que $n<<d$.
+ Mais il en est pas des moindres d'envisager de les impl\'ementer.
+-En effet la complexit\'e pour repr\'esenter l'estimation $P(X=D_0(x)|Y)$
+-en m\'emoire est en $O(2^d)$ puisque nous repr\'esenterons les valeurs de
+-probabilit\'es pour les \'eventuelles $2^d$ descriptions dans
+-$\left\{0,1\right\}^d$. Sur les corpus \cword{spam}, \cword{nospam}
+-fournis, on d\'enombre $53808$ mots. C'est \`a dire qu'il serait n\'ecessaire
+-d'avoir une structure de donn\'ees donnant l'acc\`es \`a $2^{53808}$
++En effet la complexit\'e pour repr\'esenter l'estimation $P(X=D_0(x)|Y)$ 
++en m\'emoire est en $O(2^d)$ puisque nous repr\'esenterions les valeurs de
++probabilit\'es pour les \'eventuelles $2^d$ descriptions dans 
++$\left\{0,1\right\}^d$. Sur les corpus \cword{spam}, \cword{nospam} 
++fournis, on d\'enombre $53808$ mots. C'est \`a dire qu'il serais n\'ecessaire
++d'avoir une structure de donn\'ees donnant l'acc\`es \`a $2^{53808}$ 
+ , et autrement dit environs $10^{1800\cdot9}$ flottants.
+ 
+-Face \`a ce probl\`eme nous pouvons ou bien \'etudier
+-l'ind\'ependance des variables al\'eatoires $X_i=\mathbb{I}_x[x_i]$
++Face \`a ce probl\`eme nous pouvons ou bien \'etudier 
++l'ind\'ependance des variables al\'eatoires $X_i=\mathbb{I}_x[xi]$ 
+ et en conservant la description $D_0$ stocker l'estimation $P(X=D_0(x)|Y)$
+ avec $O(d)$ flottants $P(X_i=\mathbb{I}_x[x_i]|Y)$, ou bien r\'eduire $d$
+ \`a partir d'une heuristique parce que la borne $2^d$ reste tr\`es pessimiste.
+ 
+ Faute de quoi, on peut s'apercevoir qu'il n'est pas n\'ecessaire de
+ consid\'erer $\mathcal{D}$ dans sa totalit\'ee aussi bien qu'il n'est pas
+-n\'ecessaire de sauvegarder toutes les combinaisons possibles d'apparitions
+-parce que nombre d'entre elles sont nulles i.e. impossibles de la perspective
+-de l'ensemble d'apprentissage.
++n\'ecessaire de sauvegarder toutes les combinaisons possibles de parceque
++nombre d'entre elles sont nulles i.e. consid\'er\'ees comme impossibles au vu
++de la base d'apprentissage.
+ 
+ \begin{figure}[h]
+ \begin{center}
+@@ -243,18 +211,18 @@
+ \label{fig:repr0}
+ \end{figure}
+ 
+-La F\textsc{igure} \ref{fig:repr0} propose une premi\`ere heuristique qui est
++La F\textsc{igure} \ref{fig:repr0} propose une premi\`ere heurisitque qui est
+ de ne pas consid\'erer les mot trop peu apparus avec chacune des indicatrices
+-au del\`a des 5000 premiers mots de $\mathcal{D}$ et de ne pas consid\'erer
+-les mots trop fr\`equents  apparus dans l'ensemble d'apprentissage non plus.
++au del\`a des 5000 premiers mots de $\mathcal{D}$ et de ne pas consid\'erer 
++les mots trop fr\'equements apparus dans l'ensemble d'apprentissage non plus.
+ D\`es \`a pr\'esent nous concentrerons nos efforts sur $D_{\sigma,\overline\sigma}$
+ la description pour un email sur le sous-ensemble significatif de
+ $\mathcal{D}$, $\sigma$, pour lequel nous pourrions estimer non exhaustivement
+-et raisonnablement les combinaisons apparues. Donc il s'agit de la restriction de
+-$D_0$ sur $\sigma$; et d'autre part prolong\'ee sur le sous-ensemble
+-non significatif $\overline\sigma$ sur lequel on pr\'esentera plus loin
+-des alternatives sous des hypoth\`ese faibles d'ind\'ependance.
+-On nomme se couple $(\sigma, \overline\sigma)$ la repr\'esentation du corpus.
++et raisonablement les combinaisons apparues. Il s'agit de la restriction de
++$D_0$ avec $\sigma$ et d'autre part prolong\'ee sur le sous-ensemble 
++non significatif $\overline\sigma$ sur lequel on pr\'esentera plus loin 
++des alternatives sous des hypoth\'ese faibles d'ind\'ependance. 
++On appel le couple $(\sigma, \overline\sigma)$ la repr\'esentation du corpus.
+ 
+ Quand il s'agira de proposer une description dans ce contexte, nous distinguerons
+ \begin{itemize}
+@@ -264,15 +232,14 @@
+         pour chacun de ces 500 mots de $\sigma$.
+ \end{itemize}
+ 
+-
+-\vskip 4mm
++\paragraph{}
+ D'ailleurs nous nous proposons de visualiser empiriquement si le produit des
+ distributions ind\'ependantes des $P(X_i=D_{i,\sigma}(x)|Y)$  est proche de la distribution
+-de $P(X=D_{\sigma}(x)|Y)$ pour le corpus donn\'e. Nous r\'ealisons autant d'estimations
+-qu'il y a de blocs successifs de 500 mots dans $\mathcal{D}$ tronqu\'e au mot 10000.
++de $P(X=D_{\sigma}(x)|Y)$ pour un corpus donn\'e. Nous r\'ealisons autant d'estimations
++qu'il y a de blocs successifs de 500 mots dans $\mathcal{D}$ tronqu\'e au mot 10000. 
+ %
+-Il s'agit de 20 blocs, la complexit\'e empirique du nombre d'estimations
+-pour chaque bloc se lit T\textsc{able} \ref{table:combinaisons_decalages}).
++Il s'agit de 20 blocs, la complexit\'e empirique du nombre d'estimations 
++pour chaque bloc se lit T\textsc{able} \ref{table:combinaisons_decalages}). 
+ %
+ Nous prenons les mots dans l'ordre des plus fr\'equents aux moins fr\'equents.
+ 
+@@ -290,36 +257,35 @@
+ \end{table}
+ 
+ Le premier constat empirique est que la complexit\'e de $D_\sigma$ \`a \'et\'e
+-surestim\'ee par $2^d$ dans ce cas pratique avec Card$(\sigma)=500$. De plus,
++surrestim\'ee par $2^d$ dans ce cas pratique o\`u Card$(\sigma)=500$. De plus,
+ on visualise ici que l'information inf\'er\'ee sur le corpus est moindre sur
+-les tranches de mots moins fr\'equents.
++les tranches de mots moins fr\'equents. 
+ %
+-Pour la repr\'esentation sur les 10000 premiers mots de $\mathcal{D}$,
++Pour la repr\'esentation sur les 10000 premiers mots de $\mathcal{D}$, 
+ nous pourrions plut\^ot que consid\'erer les estimations avec $D_{\sigma}$
+-consid\'erer les 20 estimations sur ces blocs avec $D_{\sigma_i}$ o\`u
++consid\'erer les 20 estimations sur ces blocs avec $D_{\sigma_i}$ o\`u 
+ $\sigma_i$ correspond \`a un bloc et supposer ces distributions
+-ind\'ependantes.
+-Cette derni\`ere hypoth\`ese est moins forte que si on suppose
++ind\'ependantes. 
++Cette derni\`ere hypoth\`ese est moins forte que si on suppose 
+ l'ind\'ependance sur des blocs de taille 1.
+ 
+-Le calcul des distributions pour chaque repr\'esentation ${\sigma_i}$,
+-$1\leq i\leq 20$, pour les 20 blocs de 500 mots et le calcul des distributions
+-pour chaque repr\'esentation en supposant l'ind\'ependance
+-(donc 20 vecteurs de taille 500) sont r\'ealis\'es s\'epar\'ements en exploitant
+-les features de la librairie \cword{multiprocessing} de \cword{python3}
+-et en utilisant le module \cword{numpy}.
+-Nous sauvegardons ces donn\'ees sur le corpus dans des fichiers qui finalement,
+-rappelons-le, d\'ecrivent l'ensemble des param\`etres pour construire le
+-mod\`ele $\Theta(E)$.
++Le calcul des distributions pour chaque repr\'entation ${\sigma_i}$,
++$1\leq i\leq 20$, pour les 20 blocs de 500 mots et le calcul des distributions 
++pour chaque repr\'ensentation en supposant l'ind\'ependance 
++(donc 20 vecteurs de taille 500) 
++sont r\'ealis\'es s\'epar\`ements en exploitant les features de la librairie
++\cword{multiprocessing} de \cword{python3} et en utilisant le module \cword{numpy}.
++Nous sauvegardons ces fichiers qui, rappelons-le, d\'ecrivent l'ensemble des
++param\`etres pour construire le mod\`ele $\Theta(E)$.
+ 
+-En termes d'impl\'ementation, l'estimation d'une repr\'esentation $\sigma_i$
+-\emph{suppos\'ee ind\'ependante} est une liste de taille Card$(\sigma_i)$
++En termes d'impl\'ementation, l'estimation d'une repr\'esentation $\sigma_i$ 
++suppos\'ee ind\'ependante est une liste de taille Card$(\sigma_i)$ 
+ des probabilit\'es $P(X=D_{j,\sigma_i}(x)|Y=y)$, $1\leq j\leq \text{Card}(\sigma_i)$,
+ pour chaque label $y\in\left\{-1,+1\right\}$ et estim\'ee sur les $x$ de $E$.
+ D'autre part, l'estimation d'une repr\'esentation $\sigma_i$ est un dictionnaire
+-dont les cl\'es sont les cha\^ines de caract\`eres de tailles
++dont les cl\'es sont les cha\^ines de caract\`eres de tailles 
+ Card$(\sigma_i)$ compos\'ees de \cword{0} et \cword{1}
+-qui pointent vers les probabilit\'es $P(X=D_{\sigma_i}(x)|Y=y)$ --
++qui pointent vers les probabilit\'es $P(X=D_{\sigma_i}(x)|Y=y)$ -- 
+ ces choix d'impl\'ementation se justifient du fait que
+ $D_{\sigma_i}(x)\in\left\{0,1\right\}^{\text{Card}(\sigma_i)}$ et
+ que $D_{j,\sigma_i}(x)\in\left\{0,1\right\}$.
+@@ -327,8 +293,7 @@
+ \begin{figure}[h]
+ \begin{center}
+     \caption{%
+-    $\Delta_{+1}(x)=\left|
+-    \prod _j P(X=D_{j,\sigma_i}|Y=+1)-P(X=D_{\sigma_i}|Y=+1)\right|(x)$}
++    $\Delta_{+1}(x)=\left|\prod _j P(X=D_{j,\sigma_i}|Y=+1)-P(X=D_{\sigma_i}|Y=+1)\right|(x)$}
+     \label{fig:blocs_indes_spam}
+     \includegraphics[width=13cm]{blocs_indes_spam}
+ \end{center}
+@@ -336,8 +301,7 @@
+ \begin{figure}[h]
+ \begin{center}
+     \caption{%
+-    $\Delta_{-1}(x)=\left|
+-    \prod _j P(X=D_{j,\sigma_i}|Y=-1)-P(X=D_{\sigma_i}|Y=-1)\right|(x)$}
++    $\Delta_{-1}(x)=\left|\prod _j P(X=D_{j,\sigma_i}(x)|Y=-1)-P(X=D_{\sigma_i}(x)|Y=-1)\right|$}
+     \label{fig:blocs_indes_nospam}
+     \includegraphics[width=13cm]{blocs_indes_nospam}
+ \end{center}
+@@ -346,16 +310,16 @@
+ Nous avons calcul\'e pour chaque bloc la diff\'erence de probabilit\'e
+ sous chacune des hypoth\`eses. Les diff\'erences sont trac\'ees sur la
+ F\textsc{igure} \ref{fig:blocs_indes_spam} et la F\textsc{igure}
+-\ref{fig:blocs_indes_nospam} si elle est inf\'erieure \`a $10^{-2}$
++\ref{fig:blocs_indes_nospam} si elle est inf\'erieure \`a $10^{-2}$ 
+ pour les estimations des repr\'esentations $\sigma_i$, $1\leq i\leq 19$.
+-On en d\'eduit que l'hypoth\`ese d'ind\'ependance des $X_j=D_{j,\sigma_i}$
+-est trop forte pour inf\'erer un bon mod\`ele et surtout sur les blocs des
+-mots les plus fr\'equents. On pourra se faire une id\'ee plus fine
+-des ind\'ependances en fonction de $\sigma_i$ le bloc de mots
++On en d\'eduit que l'hypoth\'ese d'ind\'ependance des $X_j=D_{\sigma_i}$
++est trop forte pour inf\'erer un bon mod\`ele surtout sur les blocs de
++mots les plus fr\'equents. On pourra se faire une id\'ee plus fine 
++des ind\'ependances en fonction de $\sigma_i$ le bloc de mots 
+ \'evalu\'e avec la F\textsc{igure} \ref{fig:seuils_indes_spam} et
+ la F\textsc{igure} \ref{fig:seuils_indes_nospam} qui pour chaque classe
+ et chaque bloc indiquent le nombre de cl\'es pour lesquelles ont doit
+-r\'efuter l'hypoth\`ese pour un seuil $\Delta_y(x)<10^{-2}$.
++r\'efuter l'hypoth\`ese pour un seuil de $10^{-2}$.
+ 
+ \begin{figure}[h]
+ \begin{center}
